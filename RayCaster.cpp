@@ -21,7 +21,7 @@ struct vector2i {
 
 
 class RayCaster : public olc::PixelGameEngine {
-	int map[MAP_HEIGHT][MAP_WIDTH] = {
+	int worldMap[MAP_HEIGHT][MAP_WIDTH] = {
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -73,8 +73,8 @@ public:
 	}
 
 	bool OnUserUpdate(float fElapsedTime) override {
-		int mapWidth = (int)(sizeof(map[0]) / sizeof(int));
-		int mapHeight = (int)(sizeof(map) / sizeof(map[0]));
+		int mapWidth = (int)(sizeof(worldMap[0]) / sizeof(int));
+		int mapHeight = (int)(sizeof(worldMap) / sizeof(worldMap[0]));
 
 		//rasterize minimap
 
@@ -141,8 +141,25 @@ public:
 				sideDist.y = (map.y + 1.0 - pos.y) * deltaDist.y;
 			}
 
+			while (hit == 0) {
+				if (sideDist.x < sideDist.y) {
+					map.x += deltaDist.x;
+					side = 0;
+				}
+				else {
+					sideDist.y += deltaDist.y;
+					map.y += step.y;
+					side = 1;
+				}
+				// check if wall hit
+				if (worldMap[map.x][map.y > 0]) {
+					hit = 1;
+				}
+			}
 		}
 		
+		//DDA
+	
 
 		return true;
 	}
