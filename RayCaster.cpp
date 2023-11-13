@@ -140,7 +140,7 @@ public:
 				step.y = 1;
 				sideDist.y = (map.y + 1.0 - pos.y) * deltaDist.y;
 			}
-
+			// DDA
 			while (hit == 0) {
 				if (sideDist.x < sideDist.y) {
 					map.x += deltaDist.x;
@@ -156,11 +156,13 @@ public:
 					hit = 1;
 				}
 			}
-		}
-		
-		//DDA
-	
+			// dist from hit to cam plane 
+			if (side == 0) perpWallDist = (sideDist.x - deltaDist.x);
+			else perpWallDist = (sideDist.y - deltaDist.y);
 
+
+
+		}
 		return true;
 	}
 };
