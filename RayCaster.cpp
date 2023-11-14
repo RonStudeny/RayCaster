@@ -2,8 +2,8 @@
 
 #define MAP_WIDTH 24
 #define MAP_HEIGHT 24
-#define SCREEN_WIDTH 96
-#define SCREEN_HEIGHT 96
+#define SCREEN_WIDTH 340
+#define SCREEN_HEIGHT 240
 
 #include "olcPixelGameEngine.h"
 
@@ -89,7 +89,7 @@ public:
 		//		int cellSizeX = (x + 1) * cellWidth - cellX;
 		//		int cellSizeY = (y + 1) * cellHeight - cellY;
 
-		//		switch (map[(int)(y)][(int)(x)]) {
+		//		switch (worldMap[(int)(y)][(int)(x)]) {
 		//		case 0:
 		//			//Draw(x, y, olc::Pixel(0, 0, 0));
 		//			FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(0, 0, 0));
@@ -157,11 +157,36 @@ public:
 				}
 			}
 			// dist from hit to cam plane 
-			if (side == 0) perpWallDist = (sideDist.x - deltaDist.x);
-			else perpWallDist = (sideDist.y - deltaDist.y);
+			if (side == 0)  perpWallDist = (sideDist.x - deltaDist.x);
+			else			perpWallDist = (sideDist.y - deltaDist.y);
+
+			int lineHeight = (int)(SCREEN_HEIGHT / perpWallDist);
+
+			int drawStart = -lineHeight / 2 + SCREEN_HEIGHT / 2;
+			if (drawStart < 0) drawStart = 0;
+			int drawEnd = lineHeight / 2 + SCREEN_HEIGHT / 2;
+			if (drawEnd >= SCREEN_HEIGHT) drawEnd = SCREEN_HEIGHT - 1;
 
 
+			olc::Pixel color;
 
+			switch (worldMap[map.x][map.y])
+			{
+			case 1: color = { 255, 0, 0 }; // red
+				  break;
+			case 2: color = { 0, 255, 0 }; // green
+				  break;
+			case 3: color = { 0, 0, 255 }; // blue
+				  break;
+			case 4: color = { 255, 255, 255 }; // white
+				  break;
+			default: color = { 0, 255, 255 }; // yellow
+				  break;
+			}
+
+		//	if (side == 1) color /= 2;
+
+			DrawLine(x, drawEnd, x, drawStart, color);		
 		}
 		return true;
 	}
