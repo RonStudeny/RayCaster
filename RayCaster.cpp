@@ -48,9 +48,9 @@ class RayCaster : public olc::PixelGameEngine {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 	};
 
-	vector2f pos;
-	vector2f dir;
-	vector2f camPlane;
+	vector2d pos;
+	vector2d dir;
+	vector2d camPlane;
 
 	double time; // time of the current frame
 	double prevTime; // time of the previous frame
@@ -65,7 +65,7 @@ public:
 
 		pos = { 22, 12 };
 		dir = { -1, 0 };
-		camPlane = { 0, 0.66f };
+		camPlane = { 0, 0.66 };
 
 		time = 0; // time of the current frame
 		prevTime = 0; // time of the previous frame
@@ -73,8 +73,9 @@ public:
 	}
 
 	bool OnUserUpdate(float fElapsedTime) override {
-		int mapWidth = (int)(sizeof(worldMap[0]) / sizeof(int));
-		int mapHeight = (int)(sizeof(worldMap) / sizeof(worldMap[0]));
+		//int mapWidth = (int)(sizeof(worldMap[0]) / sizeof(int));
+		//int mapHeight = (int)(sizeof(worldMap) / sizeof(worldMap[0]));
+		Clear(olc::DARK_BLUE);
 
 		//rasterize minimap
 
@@ -104,9 +105,9 @@ public:
 		//	}
 
 
-		for (size_t x = 0; x < mapWidth; x++)
+		for (size_t x = 0; x < SCREEN_WIDTH; x++)
 		{
-			double cameraX = 2 * x / double(mapWidth) - 1;
+			double cameraX = 2 * x / double(SCREEN_WIDTH) - 1;
 			vector2d rayDir;
 			rayDir.x = dir.x + camPlane.x * cameraX;
 			rayDir.y = dir.y + camPlane.y * cameraX;
@@ -162,41 +163,33 @@ public:
 
 			int lineHeight = (int)(SCREEN_HEIGHT / perpWallDist);
 
-			int drawStart = -lineHeight / 2 + SCREEN_HEIGHT / 2;
+			int drawStart =   (-lineHeight / 2) + (SCREEN_HEIGHT / 2);
 			if (drawStart < 0) drawStart = 0;
-			int drawEnd = lineHeight / 2 + SCREEN_HEIGHT / 2;
+			int drawEnd = (lineHeight / 2) + (SCREEN_HEIGHT / 2);
 			if (drawEnd >= SCREEN_HEIGHT) drawEnd = SCREEN_HEIGHT - 1;
 
 
 			olc::Pixel color;
-
-			switch (worldMap[map.x][map.y])
-			{
-			case 1: color = { 255, 0, 0 }; // red
-				  break;
-			case 2: color = { 0, 255, 0 }; // green
-				  break;
-			case 3: color = { 0, 0, 255 }; // blue
-				  break;
-			case 4: color = { 255, 255, 255 }; // white
-				  break;
-			default: color = { 0, 255, 255 }; // yellow
-				  break;
-			}
+			int hitNum = worldMap[map.x][map.y];
+			//switch (hitNum)
+			//{
+			//case 1: color = { 255, 0, 0 }; // red
+			//	  break;
+			//case 2: color = { 0, 255, 0 }; // green
+			//	  break;
+			//case 3: color = { 0, 0, 255 }; // blue
+			//	  break;
+			//case 4: color = { 255, 255, 255 }; // white
+			//	  break;
+			//default: color = { 0, 255, 255 }; // yellow
+			//	  break;
+			//}
 
 		//	if (side == 1) color /= 2;
 
-			DrawLine(x, drawEnd, x, drawStart, color);		
+			DrawLine(x, drawEnd, x, drawStart, olc::Pixel(255, 0, 0));
 		}
 		return true;
 	}
 };
 
-int main() {
-	RayCaster rc;
-	if (rc.Construct(SCREEN_WIDTH, SCREEN_HEIGHT, 4, 4)) {
-		rc.Start();
-	}
-
-	return 0;
-}
