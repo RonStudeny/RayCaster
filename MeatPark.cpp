@@ -94,6 +94,11 @@ public:
 		if (GetKey(olc::Key::A).bHeld) playerPos.x -= 1;
 		if (GetKey(olc::Key::D).bHeld) playerPos.x += 1;
 
+		if (GetKey(olc::Key::S).bHeld) playerPos.y -= 1;
+		if (GetKey(olc::Key::W).bHeld) playerPos.y += 1;
+
+		
+
 		return true;
 	}
 };
