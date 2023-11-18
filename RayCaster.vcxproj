@@ -139,7 +139,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="MeatPark.cpp" />
     <ClCompile Include="RayCaster.cpp" />
   </ItemGroup>
   <ItemGroup>

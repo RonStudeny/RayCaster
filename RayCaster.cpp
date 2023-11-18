@@ -1,6 +1,6 @@
+#define OLC_PGE_APPLICATION
 #include"olcPixelGameEngine.h"
 
-#define OLC_PGE_APPLICATION
 
 #define MAP_WIDTH 24
 #define MAP_HEIGHT 24
