@@ -7,6 +7,9 @@
 #define SCREEN_WIDTH 200
 #define SCREEN_HEIGHT 200
 
+#define MINIMAP_WIDTH 32
+#define MINIMAP_HEIGHT 32
+
 
 struct vector2i {
 	int x, y;
@@ -20,6 +23,8 @@ struct Player {
 	vector2d pos{ 10, 10 };
 	vector2d dir{ 0, 0 };
 
+	double speed{ 0.01 };
+	double turnRate{ 0.01 };
 };
 
 void setDir(vector2d& dir, double angle) {
@@ -83,10 +88,34 @@ public:
 		int mapHeight = (int)(sizeof(worldMap) / sizeof(worldMap[0]));
 		Clear(olc::DARK_BLUE);
 
+		// PLAYER MOVEMENT
+		/* nornalize with delta time, dumb ass*/
+		if (GetKey(olc::Key::A).bHeld) player.pos.x -= player.speed;
+		if (GetKey(olc::Key::D).bHeld) player.pos.x += player.speed;
+		if (GetKey(olc::Key::W).bHeld) player.pos.y -= player.speed;
+		if (GetKey(olc::Key::S).bHeld) player.pos.y += player.speed;
+
+		if (GetKey(olc::Key::Q).bHeld) {
+			rotateBy(player.dir, -player.turnRate);
+		}
+		if (GetKey(olc::Key::E).bHeld) {
+			rotateBy(player.dir, player.turnRate);
+		}
+
+
+		//RAY CASTING
+
+		for (size_t x = 0; x < SCREEN_WIDTH; x++)
+		{
+			
+		}
+
+
+
 		//rasterize minimap
 
-		float cellWidth = (float)SCREEN_WIDTH / mapWidth;
-		float cellHeight = (float)SCREEN_HEIGHT / mapHeight;
+		float cellWidth = (float)MINIMAP_WIDTH / mapWidth;
+		float cellHeight = (float)MINIMAP_HEIGHT / mapHeight;
 
 		for (int x = 0; x < mapWidth; x++)
 			for (int y = 0; y < mapHeight; y++) {
@@ -102,35 +131,27 @@ public:
 					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(0, 0, 0));
 					break;
 				case 1:
-					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(105, 105, 105));
+					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::DARK_GREY));
 					break;
+				case 2:
+					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::YELLOW));
+					break;
+				case 3:
+					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::BLUE));
+					break;
+					
 				default:
-					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(255, 0, 0));
+					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::DARK_RED));
 					
 				}
 			}
-		/* nornalize with delta time, dumb ass*/
-		if (GetKey(olc::Key::A).bHeld) player.pos.x -= 0.1;
-		if (GetKey(olc::Key::D).bHeld) player.pos.x += 0.1;
-		if (GetKey(olc::Key::W).bHeld) player.pos.y -= 0.1;
-		if (GetKey(olc::Key::S).bHeld) player.pos.y += 0.1;
-
-		if (GetKey(olc::Key::Q).bHeld) {
-			rotateBy(player.dir, -0.01);
-		}
-		if (GetKey(olc::Key::E).bHeld) {
-			rotateBy(player.dir, 0.01);
-		}
 
 
-		//Draw(player.pos.x, player.pos.y, olc::Pixel(0, 0, 255));
-
-		FillRect(player.pos.x - 1, player.pos.y - 1, 3, 3, olc::Pixel(0, 0, 255));
-		//rotateBy(player.dir, 1); 
-		double endY = player.pos.y + 10 * player.dir.y;
-		double endX = player.pos.x + 10 * player.dir.x;
-
+		double endY = player.pos.y + 5 * player.dir.y;
+		double endX = player.pos.x + 5 * player.dir.x;
+		 
 		DrawLine(player.pos.x, player.pos.y, endX, endY, olc::Pixel(olc::DARK_CYAN));
+		FillRect(player.pos.x, player.pos.y, 1, 1, olc::Pixel(olc::RED));
 
 		return true;
 	}
