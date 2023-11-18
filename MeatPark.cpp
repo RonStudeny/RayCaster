@@ -16,8 +16,29 @@ struct vector2d {
 	double x, y;
 };
 
+struct Player {
+	vector2d pos{ 10, 10 };
+	vector2d dir{ 0, 0 };
+
+};
+
+void setDir(vector2d& dir, double angle) {
+	dir.x = cos(angle);
+	dir.y = sin(angle);
+}
+
+void rotateBy(vector2d& dir, double angle) {
+	double newDirX = dir.x * cos(angle) - dir.y * sin(angle);
+	double newDirY = dir.x * sin(angle) + dir.y * cos(angle);
+
+	dir.x = newDirX;
+	dir.y = newDirY;
+}
+
+
 class RayCaster : public olc::PixelGameEngine {
 
+	Player player;
 	int worldMap[MAP_HEIGHT][MAP_WIDTH] = {
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -45,8 +66,6 @@ class RayCaster : public olc::PixelGameEngine {
 {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 	};
 
-	vector2d playerPos {10, 10};
-
 public:
 	RayCaster() {
 		sAppName = "RayCaster";
@@ -54,7 +73,7 @@ public:
 
 public:
 	bool OnUserCreate() override {
-
+		setDir(player.dir, 0);
 		return true;
 	}
 
@@ -90,14 +109,28 @@ public:
 					
 				}
 			}
+		/* nornalize with delta time, dumb ass*/
+		if (GetKey(olc::Key::A).bHeld) player.pos.x -= 0.1;
+		if (GetKey(olc::Key::D).bHeld) player.pos.x += 0.1;
+		if (GetKey(olc::Key::W).bHeld) player.pos.y -= 0.1;
+		if (GetKey(olc::Key::S).bHeld) player.pos.y += 0.1;
 
-		if (GetKey(olc::Key::A).bHeld) playerPos.x -= 0.1;
-		if (GetKey(olc::Key::D).bHeld) playerPos.x += 0.1;
+		if (GetKey(olc::Key::Q).bHeld) {
+			rotateBy(player.dir, -0.01);
+		}
+		if (GetKey(olc::Key::E).bHeld) {
+			rotateBy(player.dir, 0.01);
+		}
 
-		if (GetKey(olc::Key::W).bHeld) playerPos.y -= 0.1;
-		if (GetKey(olc::Key::S).bHeld) playerPos.y += 0.1;
 
-		Draw(playerPos.x, playerPos.y, olc::Pixel(0, 0, 255));
+		//Draw(player.pos.x, player.pos.y, olc::Pixel(0, 0, 255));
+
+		FillRect(player.pos.x - 1, player.pos.y - 1, 3, 3, olc::Pixel(0, 0, 255));
+		//rotateBy(player.dir, 1); 
+		double endY = player.pos.y + 10 * player.dir.y;
+		double endX = player.pos.x + 10 * player.dir.x;
+
+		DrawLine(player.pos.x, player.pos.y, endX, endY, olc::Pixel(olc::DARK_CYAN));
 
 		return true;
 	}
@@ -109,7 +142,6 @@ int main() {
 	if (rc.Construct(SCREEN_WIDTH, SCREEN_HEIGHT, 4, 4)) {
 		rc.Start();
 	}
-
 	return 0;
 }
 
