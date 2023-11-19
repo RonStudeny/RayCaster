@@ -1,3 +1,5 @@
+#include <iostream>
+
 #define OLC_PGE_APPLICATION
 #include"olcPixelGameEngine.h"
 
@@ -17,6 +19,10 @@ struct vector2i {
 
 struct vector2d {
 	double x, y;
+};
+
+struct Camera {
+	vector2d plane{ 0, 0.66 };
 };
 
 struct Player {
@@ -44,6 +50,7 @@ void rotateBy(vector2d& dir, double angle) {
 class RayCaster : public olc::PixelGameEngine {
 
 	Player player;
+	Camera cam;
 	int worldMap[MAP_HEIGHT][MAP_WIDTH] = {
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -107,6 +114,60 @@ public:
 
 		for (size_t x = 0; x < SCREEN_WIDTH; x++)
 		{
+			double cameraX = 2 * x / double(SCREEN_WIDTH) - 1;
+			vector2d rayDir;
+			rayDir.x = player.dir.x + cam.plane.x * cameraX;
+			rayDir.y = player.dir.y + cam.plane.y * cameraX;
+
+			
+			vector2i rayPosInMap {(int)player.pos.x, (int)player.pos.y};
+			vector2d sideDist;
+			vector2d deltaDist;
+				
+			deltaDist.x = (rayDir.x == 0) ? 1e30 : std::abs(1 / rayDir.x);
+			deltaDist.y = (rayDir.y == 0) ? 1e30 : std::abs(1 / rayDir.y);
+
+			double perpWallDist;
+			vector2i step;
+
+			int hit = 0;
+			int side;
+
+			if (rayDir.x < 0) {
+				step.x = -1;
+				sideDist.x = (player.pos.x - rayPosInMap.x) * deltaDist.x;
+			}
+			else {
+				step.x = 1;
+				sideDist.x = (rayPosInMap.x + 1.0 - player.pos.x) * deltaDist.x;
+			}
+			if (rayDir.y < 0) {
+				step.y = -1;
+				sideDist.y = (player.pos.y - rayPosInMap.y) * deltaDist.y;
+			}
+			else {
+				step.y = 1;
+				sideDist.y = (rayPosInMap.y + 1.0 - player.pos.y) * deltaDist.y;
+			}
+
+			// DDA
+
+			while (hit == 0) {
+				if (sideDist.x < sideDist.y) {
+					sideDist.x += deltaDist.x;
+					rayPosInMap.x += step.x;
+					side = 0;
+				}
+				else {
+					sideDist.y += deltaDist.y;
+					rayPosInMap.y += step.y;
+					side = 1;
+				}
+				if (worldMap[rayPosInMap.x][rayPosInMap.y] > 0) hit = 1;
+			}
+
+
+			
 			
 		}
 
