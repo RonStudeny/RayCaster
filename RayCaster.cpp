@@ -118,7 +118,6 @@ public:
 			vector2d rayDir;
 			rayDir.x = player.dir.x + cam.plane.x * cameraX;
 			rayDir.y = player.dir.y + cam.plane.y * cameraX;
-
 			
 			vector2i rayPosInMap {(int)player.pos.x, (int)player.pos.y};
 			vector2d sideDist;
@@ -166,10 +165,34 @@ public:
 				if (worldMap[rayPosInMap.x][rayPosInMap.y] > 0) hit = 1;
 			}
 
+			if (side == 0) {
+				perpWallDist = (sideDist.x - deltaDist.x);
+			}
+			else perpWallDist = (sideDist.y - deltaDist.y);
 
-			
-			
+			int lineHeight = (int)(SCREEN_HEIGHT / perpWallDist);
+
+			int drawStart = -lineHeight / 2 + SCREEN_HEIGHT / 2;
+			if (drawStart < 0) drawStart = 0;
+			int drawEnd = lineHeight / 2 + SCREEN_HEIGHT / 2;
+			if (drawEnd >= SCREEN_HEIGHT) drawEnd = SCREEN_HEIGHT - 1;
+
+			olc::Pixel color;
+
+			switch (worldMap[rayPosInMap.x][rayPosInMap.y]) {
+			case 1: color = olc::RED; break;
+			case 2: color = olc::GREEN; break;
+			case 3: color = olc::BLUE; break;
+			case 4: color = olc::WHITE; break;
+			case 5: color = olc::YELLOW; break;
+			}
+
+			// if (side == 1) color = color / 2;
+
+			DrawLine(x, drawStart, x, drawEnd, color);
 		}
+
+
 
 
 
@@ -199,8 +222,7 @@ public:
 					break;
 				case 3:
 					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::BLUE));
-					break;
-					
+					break;	
 				default:
 					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::DARK_RED));
 					
