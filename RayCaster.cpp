@@ -26,7 +26,7 @@ struct Camera {
 };
 
 struct Player {
-	vector2d pos{ 10, 10 };
+	vector2d pos{ 9, 9 };
 	vector2d dir{ 0, 0 };
 
 	double speed{ 0.01 };
@@ -97,10 +97,23 @@ public:
 
 		// PLAYER MOVEMENT
 		/* nornalize with delta time, dumb ass*/
-		if (GetKey(olc::Key::A).bHeld) player.pos.x -= player.speed;
-		if (GetKey(olc::Key::D).bHeld) player.pos.x += player.speed;
-		if (GetKey(olc::Key::W).bHeld) player.pos.y -= player.speed;
-		if (GetKey(olc::Key::S).bHeld) player.pos.y += player.speed;
+		if (GetKey(olc::Key::A).bHeld) {
+			player.pos.x += player.dir.y * player.speed;
+			player.pos.y -= player.dir.x * player.speed;
+		}
+		if (GetKey(olc::Key::D).bHeld) {
+			player.pos.x -= player.dir.y * player.speed;
+			player.pos.y += player.dir.x * player.speed;
+		}
+
+		if (GetKey(olc::Key::W).bHeld) {
+			player.pos.x += player.dir.x * player.speed;
+			player.pos.y += player.dir.y * player.speed;
+		}
+		if (GetKey(olc::Key::S).bHeld) {
+			player.pos.x -= player.dir.x * player.speed;
+			player.pos.y -= player.dir.y * player.speed;
+		}
 
 		if (GetKey(olc::Key::Q).bHeld) {
 			rotateBy(player.dir, -player.turnRate);
@@ -198,43 +211,43 @@ public:
 
 		//rasterize minimap
 
-		float cellWidth = (float)MINIMAP_WIDTH / mapWidth;
-		float cellHeight = (float)MINIMAP_HEIGHT / mapHeight;
+		//float cellWidth = (float)MINIMAP_WIDTH / mapWidth;
+		//float cellHeight = (float)MINIMAP_HEIGHT / mapHeight;
 
-		for (int x = 0; x < mapWidth; x++)
-			for (int y = 0; y < mapHeight; y++) {
+		//for (int x = 0; x < mapWidth; x++)
+		//	for (int y = 0; y < mapHeight; y++) {
 
-				int cellX = x * cellWidth;
-				int cellY = y * cellHeight;
-				int cellSizeX = (x + 1) * cellWidth - cellX;
-				int cellSizeY = (y + 1) * cellHeight - cellY;
+		//		int cellX = x * cellWidth;
+		//		int cellY = y * cellHeight;
+		//		int cellSizeX = (x + 1) * cellWidth - cellX;
+		//		int cellSizeY = (y + 1) * cellHeight - cellY;
 
-				switch (worldMap[(int)(y)][(int)(x)]) {
-				case 0:
-					//Draw(x, y, olc::Pixel(0, 0, 0));
-					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(0, 0, 0));
-					break;
-				case 1:
-					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::DARK_GREY));
-					break;
-				case 2:
-					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::YELLOW));
-					break;
-				case 3:
-					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::BLUE));
-					break;	
-				default:
-					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::DARK_RED));
-					
-				}
-			}
+		//		switch (worldMap[(int)(y)][(int)(x)]) {
+		//		case 0:
+		//			//Draw(x, y, olc::Pixel(0, 0, 0));
+		//			FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(0, 0, 0));
+		//			break;
+		//		case 1:
+		//			FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::DARK_GREY));
+		//			break;
+		//		case 2:
+		//			FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::YELLOW));
+		//			break;
+		//		case 3:
+		//			FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::BLUE));
+		//			break;	
+		//		default:
+		//			FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::DARK_RED));
+		//			
+		//		}
+		//	}
 
 
-		double endY = player.pos.y + 5 * player.dir.y;
-		double endX = player.pos.x + 5 * player.dir.x;
-		 
-		DrawLine(player.pos.x, player.pos.y, endX, endY, olc::Pixel(olc::DARK_CYAN));
-		FillRect(player.pos.x, player.pos.y, 1, 1, olc::Pixel(olc::RED));
+		//double endY = player.pos.y + 5 * player.dir.y;
+		//double endX = player.pos.x + 5 * player.dir.x;
+		// 
+		//DrawLine(player.pos.x, player.pos.y, endX, endY, olc::Pixel(olc::DARK_CYAN));
+		//FillRect(player.pos.x, player.pos.y, 1, 1, olc::Pixel(olc::RED));
 
 		return true;
 	}
