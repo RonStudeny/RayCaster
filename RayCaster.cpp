@@ -29,7 +29,7 @@ struct Player {
 	vector2d pos{ 2, 4 };
 	vector2d dir{ 0, 0 };
 
-	double speed{ 0.007 };
+	double speed{ 1.5 };
 	double turnRate{ 0.007 };
 };
 
@@ -86,24 +86,23 @@ public:
 		int mapHeight = (int)(sizeof(worldMap) / sizeof(worldMap[0]));
 		Clear(olc::DARK_GREY);
 
-		// PLAYER MOVEMENT
-		/* nornalize with delta time, dumb ass*/
+		// PLAYER CONTROL
 		if (GetKey(olc::Key::A).bHeld) {
-			player.pos.x += player.dir.y * player.speed;
-			player.pos.y -= player.dir.x * player.speed;
+			player.pos.x += player.dir.y * player.speed * fElapsedTime;
+			player.pos.y -= player.dir.x * player.speed * fElapsedTime;
 		}
 		if (GetKey(olc::Key::D).bHeld) {
-			player.pos.x -= player.dir.y * player.speed;
-			player.pos.y += player.dir.x * player.speed;
+			player.pos.y += player.dir.x * player.speed * fElapsedTime;
+			player.pos.x -= player.dir.y * player.speed * fElapsedTime;
 		}
 
 		if (GetKey(olc::Key::W).bHeld) {
-			player.pos.x += player.dir.x * player.speed;
-			player.pos.y += player.dir.y * player.speed;
+			player.pos.x += player.dir.x * player.speed * fElapsedTime;
+			player.pos.y += player.dir.y * player.speed * fElapsedTime;
 		}
 		if (GetKey(olc::Key::S).bHeld) {
-			player.pos.x -= player.dir.x * player.speed;
-			player.pos.y -= player.dir.y * player.speed;
+			player.pos.x -= player.dir.x * player.speed * fElapsedTime;
+			player.pos.y -= player.dir.y * player.speed * fElapsedTime;
 		}
 
 		if (GetKey(olc::Key::Q).bHeld) {
@@ -117,7 +116,6 @@ public:
 
 
 		//RAY CASTING
-
 		for (size_t x = 0; x < SCREEN_WIDTH; x++)
 		{
 			double cameraX = 2 * x / double(SCREEN_WIDTH) - 1;
