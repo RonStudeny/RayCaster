@@ -11,6 +11,8 @@
 #define TEXTURE_WIDTH 64
 #define TEXTURE_HEIGHT 64
 
+#define OFFSET 0.2
+
 #define MINIMAP_WIDTH 32
 #define MINIMAP_HEIGHT 32
 
@@ -28,11 +30,13 @@ struct Camera {
 };
 
 struct Player {
+	const int colOffset = 2;
 	vector2d pos{ 2, 4 };
 	vector2d dir{ 0, 0 };
 
 	double speed{ 1.5 };
 	double turnRate{ 1.5 };
+
 };
 
 void setDir(vector2d& dir, double angle) {
@@ -111,12 +115,15 @@ public:
 			vector2d step;
 			step.x = player.dir.x * player.speed * fElapsedTime;
 			step.y = player.dir.y * player.speed * fElapsedTime;
-			player.pos.x += worldMap[(int)(player.pos.x + step.x)][(int)player.pos.y] > 0 ? 0 : step.x;
-			player.pos.y += worldMap[(int)player.pos.x][(int)(player.pos.y + step.y)] > 0 ? 0 : step.y;
+			player.pos.x += worldMap[(int)(player.pos.x + step.x - OFFSET)][(int)player.pos.y] > 0 ? 0 : step.x;
+			player.pos.y += worldMap[(int)player.pos.x][(int)(player.pos.y + step.y - OFFSET)] > 0 ? 0 : step.y;
 		}
 		if (GetKey(olc::Key::S).bHeld) {
-			player.pos.x -= player.dir.x * player.speed * fElapsedTime;
-			player.pos.y -= player.dir.y * player.speed * fElapsedTime;
+			vector2d step;
+			step.x = player.dir.x * player.speed * fElapsedTime;
+			step.y = player.dir.y * player.speed * fElapsedTime;
+			player.pos.x -= worldMap[(int)(player.pos.x + step.x - OFFSET)][(int)player.pos.y] > 0 ? 0 : step.x;
+			player.pos.y -= worldMap[(int)player.pos.x][(int)(player.pos.y + step.y - OFFSET)] > 0 ? 0 : step.y;
 		}
 
 		if (GetKey(olc::Key::Q).bHeld) {
