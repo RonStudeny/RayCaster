@@ -102,6 +102,11 @@ public:
 		Clear(olc::DARK_GREY);
 
 		// PLAYER CONTROL
+
+		vector2d step;
+		step.x = player.dir.x * player.speed * fElapsedTime;
+		step.y = player.dir.y * player.speed * fElapsedTime;
+
 		if (GetKey(olc::Key::A).bHeld) {
 			player.pos.x += player.dir.y * player.speed * fElapsedTime;
 			player.pos.y -= player.dir.x * player.speed * fElapsedTime;
@@ -112,16 +117,10 @@ public:
 		}
 
 		if (GetKey(olc::Key::W).bHeld) {
-			vector2d step;
-			step.x = player.dir.x * player.speed * fElapsedTime;
-			step.y = player.dir.y * player.speed * fElapsedTime;
 			player.pos.x += worldMap[(int)(player.pos.x + step.x - OFFSET)][(int)player.pos.y] > 0 ? 0 : step.x;
 			player.pos.y += worldMap[(int)player.pos.x][(int)(player.pos.y + step.y - OFFSET)] > 0 ? 0 : step.y;
 		}
 		if (GetKey(olc::Key::S).bHeld) {
-			vector2d step;
-			step.x = player.dir.x * player.speed * fElapsedTime;
-			step.y = player.dir.y * player.speed * fElapsedTime;
 			player.pos.x -= worldMap[(int)(player.pos.x + step.x - OFFSET)][(int)player.pos.y] > 0 ? 0 : step.x;
 			player.pos.y -= worldMap[(int)player.pos.x][(int)(player.pos.y + step.y - OFFSET)] > 0 ? 0 : step.y;
 		}
