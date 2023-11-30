@@ -108,8 +108,11 @@ public:
 		}
 
 		if (GetKey(olc::Key::W).bHeld) {
-			player.pos.x += player.dir.x * player.speed * fElapsedTime;
-			player.pos.y += player.dir.y * player.speed * fElapsedTime;
+			vector2d step;
+			step.x = player.dir.x * player.speed * fElapsedTime;
+			step.y = player.dir.y * player.speed * fElapsedTime;
+			player.pos.x += worldMap[(int)(player.pos.x + step.x)][(int)player.pos.y] > 0 ? 0 : step.x;
+			player.pos.y += worldMap[(int)player.pos.x][(int)(player.pos.y + step.y)] > 0 ? 0 : step.y;
 		}
 		if (GetKey(olc::Key::S).bHeld) {
 			player.pos.x -= player.dir.x * player.speed * fElapsedTime;
