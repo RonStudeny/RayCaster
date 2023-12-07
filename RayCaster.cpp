@@ -103,26 +103,30 @@ public:
 
 		// PLAYER CONTROL
 
-		vector2d step;
-		step.x = player.dir.x * player.speed * fElapsedTime;
-		step.y = player.dir.y * player.speed * fElapsedTime;
+		vector2d stepVer;
+		stepVer.x = player.dir.x * player.speed * fElapsedTime;
+		stepVer.y = player.dir.y * player.speed * fElapsedTime;
+
+		vector2d stepHor;
+		stepHor.x = player.dir.y * player.speed * fElapsedTime;
+		stepHor.y = player.dir.x * player.speed * fElapsedTime;
 
 		if (GetKey(olc::Key::A).bHeld) {
-			player.pos.x += player.dir.y * player.speed * fElapsedTime;
-			player.pos.y -= player.dir.x * player.speed * fElapsedTime;
+			player.pos.x += worldMap[(int)(player.pos.x + stepHor.x)][(int)player.pos.y] > 0 ? 0 : stepHor.x;
+			player.pos.y -= worldMap[(int)player.pos.x][(int)(player.pos.y + stepHor.y)] > 0 ? 0 : stepHor.y;
 		}
 		if (GetKey(olc::Key::D).bHeld) {
-			player.pos.y += player.dir.x * player.speed * fElapsedTime;
-			player.pos.x -= player.dir.y * player.speed * fElapsedTime;
+			player.pos.x -= worldMap[(int)(player.pos.x + stepHor.x)][(int)player.pos.y] > 0 ? 0 : stepHor.x;
+			player.pos.y += worldMap[(int)player.pos.x][(int)(player.pos.y + stepHor.y)] > 0 ? 0 : stepHor.y;
 		}
 
 		if (GetKey(olc::Key::W).bHeld) {
-			player.pos.x += worldMap[(int)(player.pos.x + step.x - OFFSET)][(int)player.pos.y] > 0 ? 0 : step.x;
-			player.pos.y += worldMap[(int)player.pos.x][(int)(player.pos.y + step.y - OFFSET)] > 0 ? 0 : step.y;
+			player.pos.x += worldMap[(int)(player.pos.x + stepVer.x)][(int)player.pos.y] > 0 ? 0 : stepVer.x;
+			player.pos.y += worldMap[(int)player.pos.x][(int)(player.pos.y + stepVer.y)] > 0 ? 0 : stepVer.y;
 		}
 		if (GetKey(olc::Key::S).bHeld) {
-			player.pos.x -= worldMap[(int)(player.pos.x + step.x - OFFSET)][(int)player.pos.y] > 0 ? 0 : step.x;
-			player.pos.y -= worldMap[(int)player.pos.x][(int)(player.pos.y + step.y - OFFSET)] > 0 ? 0 : step.y;
+			player.pos.x -= worldMap[(int)(player.pos.x + stepVer.x)][(int)player.pos.y] > 0 ? 0 : stepVer.x;
+			player.pos.y -= worldMap[(int)player.pos.x][(int)(player.pos.y + stepVer.y)] > 0 ? 0 : stepVer.y;
 		}
 
 		if (GetKey(olc::Key::Q).bHeld) {
@@ -209,6 +213,7 @@ public:
 			case 3: color = olc::BLUE; break;
 			case 4: color = olc::DARK_MAGENTA; break;
 			case 5: color = olc::YELLOW; break;
+			default: color = olc::CYAN; break;
 			}
 
 			if (side == 1) color = color / 2;
