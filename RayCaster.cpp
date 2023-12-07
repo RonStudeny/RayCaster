@@ -244,17 +244,23 @@ public:
 					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(0, 0, 0));
 					break;
 				case 1:
-					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::DARK_GREY));
+					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::VERY_DARK_GREY));
 					break;
 				case 2:
-					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::YELLOW));
+					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::DARK_GREEN));
 					break;
 				case 3:
 					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::BLUE));
-					break;	
+					break;
+				case 4:
+					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::DARK_MAGENTA));
+					break;
+				case 5:
+					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::YELLOW));
+					break;
 				default:
-					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::DARK_RED));
-					
+					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(olc::CYAN));
+					break;
 				}
 			}
 
