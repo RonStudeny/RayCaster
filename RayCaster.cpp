@@ -11,7 +11,7 @@
 #define TEXTURE_WIDTH 64
 #define TEXTURE_HEIGHT 64
 
-#define OFFSET 0.2
+#define OFFSET 0.1
 
 #define MINIMAP_WIDTH 32
 #define MINIMAP_HEIGHT 32
@@ -104,29 +104,29 @@ public:
 		// PLAYER CONTROL
 
 		vector2d stepVer;
-		stepVer.x = player.dir.x * player.speed * fElapsedTime;
-		stepVer.y = player.dir.y * player.speed * fElapsedTime;
-
-		vector2d stepHor;
-		stepHor.x = player.dir.y * player.speed * fElapsedTime;
-		stepHor.y = player.dir.x * player.speed * fElapsedTime;
+		stepVer.x = (player.dir.x * player.speed * fElapsedTime);
+		stepVer.y = (player.dir.y * player.speed * fElapsedTime);
+																
+		vector2d stepHor;										
+		stepHor.x = (player.dir.y * player.speed * fElapsedTime);
+		stepHor.y = (player.dir.x * player.speed * fElapsedTime);
 
 		if (GetKey(olc::Key::A).bHeld) {
-			player.pos.x += worldMap[(int)(player.pos.x + stepHor.x)][(int)player.pos.y] > 0 ? 0 : stepHor.x;
-			player.pos.y -= worldMap[(int)player.pos.x][(int)(player.pos.y + stepHor.y)] > 0 ? 0 : stepHor.y;
+			player.pos.x += worldMap[(int)(player.pos.x + stepHor.x - OFFSET)][(int)player.pos.y] > 0 ? 0 : stepHor.x;
+			player.pos.y -= worldMap[(int)player.pos.x][(int)(player.pos.y + stepHor.y - OFFSET)] > 0 ? 0 : stepHor.y;
 		}
 		if (GetKey(olc::Key::D).bHeld) {
-			player.pos.x -= worldMap[(int)(player.pos.x + stepHor.x)][(int)player.pos.y] > 0 ? 0 : stepHor.x;
-			player.pos.y += worldMap[(int)player.pos.x][(int)(player.pos.y + stepHor.y)] > 0 ? 0 : stepHor.y;
+			player.pos.x -= worldMap[(int)(player.pos.x + stepHor.x + OFFSET)][(int)player.pos.y] > 0 ? 0 : stepHor.x;
+			player.pos.y += worldMap[(int)player.pos.x][(int)(player.pos.y + stepHor.y + OFFSET)] > 0 ? 0 : stepHor.y;
 		}
 
 		if (GetKey(olc::Key::W).bHeld) {
-			player.pos.x += worldMap[(int)(player.pos.x + stepVer.x)][(int)player.pos.y] > 0 ? 0 : stepVer.x;
-			player.pos.y += worldMap[(int)player.pos.x][(int)(player.pos.y + stepVer.y)] > 0 ? 0 : stepVer.y;
+			player.pos.x += worldMap[(int)(player.pos.x + stepVer.x)][(int)(player.pos.y + OFFSET)] > 0 ? 0 : stepVer.x;
+			player.pos.y += worldMap[(int)(player.pos.x + OFFSET)][(int)(player.pos.y + stepVer.y)] > 0 ? 0 : stepVer.y;
 		}
 		if (GetKey(olc::Key::S).bHeld) {
-			player.pos.x -= worldMap[(int)(player.pos.x + stepVer.x)][(int)player.pos.y] > 0 ? 0 : stepVer.x;
-			player.pos.y -= worldMap[(int)player.pos.x][(int)(player.pos.y + stepVer.y)] > 0 ? 0 : stepVer.y;
+			player.pos.x -= worldMap[(int)(player.pos.x + stepVer.x)][(int)(player.pos.y - OFFSET)] > 0 ? 0 : stepVer.x;
+			player.pos.y -= worldMap[(int)(player.pos.x - OFFSET)][(int)(player.pos.y + stepVer.y)] > 0 ? 0 : stepVer.y;
 		}
 
 		if (GetKey(olc::Key::Q).bHeld) {
