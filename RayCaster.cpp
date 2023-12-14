@@ -240,7 +240,6 @@ public:
 
 				switch (worldMap[(int)(y)][(int)(x)]) {
 				case 0:
-					//Draw(x, y, olc::Pixel(0, 0, 0));
 					FillRect(cellX, cellY, cellSizeX, cellSizeY, olc::Pixel(0, 0, 0));
 					break;
 				case 1:
@@ -264,12 +263,16 @@ public:
 				}
 			}
 
+		float playerMapX = player.pos.y * cellHeight;
+		float playerMapY = player.pos.x * cellWidth;
 
-		double endY = player.pos.y + 5 * player.dir.y;
-		double endX = player.pos.x + 5 * player.dir.x;
-		 
-		DrawLine(player.pos.x, player.pos.y, endX, endY, olc::Pixel(olc::DARK_CYAN));
-		FillRect(player.pos.x, player.pos.y, 1, 1, olc::Pixel(olc::RED));
+
+		double endX = playerMapX + 5 * player.dir.y;
+		double endY = playerMapY + 5 * player.dir.x;
+		// 
+		DrawLine(playerMapX, playerMapY, endX, endY, olc::Pixel(olc::DARK_CYAN));
+		//FillRect(playerMapX, playerMapY, 1, 1, olc::Pixel(olc::RED));
+		Draw(playerMapX, playerMapY, olc::Pixel(olc::RED));
 
 		return true;
 	}
